@@ -1,0 +1,6 @@
+{
+  "summary": "Rencana implementasi tab menu baru 'Import & Master Data Hub' untuk import Excel multi-sheet otomatis dan input manual satu per satu dengan validasi untuk 6 entitas master (OTR, CLOP HO, BQ, Follow Up Gform, PriceList, dan Bahan Prospek).",
+  "updatedAt": "2026-10-12T20:16:19.640529316Z",
+  "requestFeedback": true,
+  "userFacing": true
+}

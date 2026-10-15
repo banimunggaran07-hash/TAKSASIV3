@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#070b14" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SmartTaksasi" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>Smart taksasi V2.1.3</title>
+  <meta name="description" content="Smart taksasi V2.1.3 membantu marketing hitung limit pinjaman, cek kontrak, telusuri prospek, dan pantau kinerja dengan data dalam 17 pages." />
+  <meta property="og:title" content="Smart taksasi V2.1.3" />
+  <meta property="og:description" content="Smart taksasi V2.1.3 membantu marketing hitung limit pinjaman, cek kontrak, telusuri prospek, dan pantau kinerja dengan data dalam 17 pages." />
+  <meta property="og:image" content="/pwa-512x512.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Smart taksasi V2.1.3" />
+  <meta name="twitter:description" content="Smart taksasi V2.1.3 membantu marketing hitung limit pinjaman, cek kontrak, telusuri prospek, dan pantau kinerja dengan data dalam 17 pages." />
+  <meta name="twitter:image" content="/pwa-512x512.png" />
+
+  <!-- Base Framework CSS -->
+  <link rel="stylesheet" href="/assets/index-DaVsu51e.css" />
+  <!-- WealthWave Dark Glassmorphism Futuristic Neon Theme -->
+  <link rel="stylesheet" href="/wealthwave-theme.css" />
+
+  <script>
+    // Silently handle expected local websocket reconnect notices
+    window.addEventListener('error', function(e) {
+      if (e.message && (e.message.includes('websocket') || e.message.includes('connect_error') || e.message.includes('popup-closed-by-user') || e.message.includes('cancelled-popup-request'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    }, true);
+    window.addEventListener('unhandledrejection', function(e) {
+      if (e.reason && (String(e.reason).includes('websocket') || String(e.reason).includes('connect_error') || String(e.reason).includes('popup-closed-by-user') || String(e.reason).includes('cancelled-popup-request'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    }, true);
+
+    // Initialize application credentials and theme safely without interfering with React DOM
+    try {
+      // Purge any legacy third-party storage items
+      Object.keys(localStorage).forEach(function(k) {
+        var lower = k.toLowerCase();
+        if (lower.startsWith('base') && lower.indexOf('44') !== -1) {
+          try { localStorage.removeItem(k); } catch (_) {}
+        }
+      });
+      const savedTheme = localStorage.getItem("darkMode");
+      const isDark = savedTheme === null ? true : savedTheme === "true";
+      document.documentElement.classList.toggle("dark", isDark);
+      document.documentElement.classList.toggle("light", !isDark);
+      document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+    } catch (e) {
+      console.warn("Storage initialization notice:", e);
+    }
+
+    // Register service worker for offline PWA capabilities
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').catch(function() {});
+      });
+    }
+  </script>
+  <!-- SheetJS Offline Engine for Multi-Sheet Excel Master Import -->
+  <script src="/xlsx.full.min.js"></script>
+  <!-- Firebase Auth Gatekeeper Module (Strict Access Barrier) -->
+  <script type="module" src="/assets/auth-gatekeeper.bundle.js"></script>
+</head>
+<body class="dark bg-background text-foreground antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+  <div id="root" style="display: none;"></div>
+  <script type="module" src="/assets/index-r5o_qhl4.js"></script>
+  <script src="/pwa-install.js" defer></script>
+</body>
+</html>

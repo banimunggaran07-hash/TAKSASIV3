@@ -1,0 +1,194 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Pengguna aplikasi dan tim marketing",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase UID" },
+        "email": { "type": "string", "description": "Email marketing atau supervisor" },
+        "name": { "type": "string", "description": "Nama tampilan" },
+        "full_name": { "type": "string", "description": "Nama lengkap" },
+        "role": { "type": "string", "enum": ["admin", "supervisor", "marketing", "user"], "description": "Peran pengguna" },
+        "cabang": { "type": "string", "description": "Kantor cabang" },
+        "phone": { "type": "string", "description": "Nomor WhatsApp" },
+        "created_at": { "type": "string", "description": "Waktu pembuatan akun" }
+      },
+      "required": ["uid", "email"]
+    },
+    "OtrPrice": {
+      "title": "OtrPrice",
+      "description": "Daftar harga pasar OTR motor",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik entitas" },
+        "brand": { "type": "string", "description": "Merek motor (Honda, Yamaha, Suzuki, Kawasaki)" },
+        "model": { "type": "string", "description": "Model motor" },
+        "object_description": { "type": "string", "description": "Deskripsi tipe motor" },
+        "group_type_unit": { "type": "string", "description": "Kategori unit (MATIC, SPORT, BEBEK)" },
+        "year": { "type": "integer", "description": "Tahun perakitan" },
+        "harga_pasar": { "type": "number", "description": "Harga pasar resmi" },
+        "search_text": { "type": "string", "description": "Indeks pencarian cepat" },
+        "created_date": { "type": "string", "description": "Waktu import data" }
+      },
+      "required": ["brand", "model", "year", "harga_pasar"]
+    },
+    "ClopContract": {
+      "title": "ClopContract",
+      "description": "Database nomor kontrak debitur CLOP",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik entitas" },
+        "contract_no": { "type": "string", "description": "Nomor kontrak pembiayaan" },
+        "nosin": { "type": "string", "description": "Nomor mesin motor" },
+        "office_code": { "type": "string", "description": "Kode cabang" },
+        "buss_unit": { "type": "string", "description": "Unit bisnis" },
+        "trend_cycle": { "type": "string", "description": "Siklus keterlambatan" },
+        "customer_name": { "type": "string", "description": "Nama konsumen" },
+        "created_date": { "type": "string", "description": "Waktu import data" }
+      },
+      "required": ["contract_no", "customer_name"]
+    },
+    "Taksasi": {
+      "title": "Taksasi",
+      "description": "Rekap kalkulasi dan hasil taksasi motor",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik taksasi" },
+        "customer_name": { "type": "string", "description": "Nama konsumen" },
+        "contract_no": { "type": "string", "description": "Nomor kontrak terkait jika ada" },
+        "brand": { "type": "string", "description": "Merek motor" },
+        "model": { "type": "string", "description": "Model motor" },
+        "year": { "type": "integer", "description": "Tahun motor" },
+        "otr": { "type": "number", "description": "Harga OTR acuan" },
+        "km": { "type": "integer", "description": "Kilometer motor" },
+        "tahun_motor": { "type": "integer", "description": "Tahun motor" },
+        "nama_bpkb": { "type": "string", "description": "Nama pemilik BPKB" },
+        "persen_taksasi": { "type": "number", "description": "Persentase nilai taksasi" },
+        "harga_taksasi": { "type": "number", "description": "Nominal taksasi" },
+        "risk": { "type": "string", "description": "Kategori risiko" },
+        "tipe_customer": { "type": "string", "description": "Tipe nasabah" },
+        "cori": { "type": "string", "description": "Catatan cori" },
+        "merk_motor": { "type": "string", "description": "Merk motor" },
+        "plafond": { "type": "number", "description": "Plafond pinjaman yang disetujui" },
+        "status": { "type": "string", "description": "Status taksasi" },
+        "created_date": { "type": "string", "description": "Tanggal pembuatan rekaman" }
+      },
+      "required": ["customer_name"]
+    },
+    "Target": {
+      "title": "Target",
+      "description": "Target pembiayaan bulanan tim marketing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID target" },
+        "marketing_name": { "type": "string", "description": "Nama staf marketing" },
+        "cabang": { "type": "string", "description": "Cabang operasional" },
+        "month": { "type": "string", "description": "Bulan target (YYYY-MM)" },
+        "target_amount": { "type": "number", "description": "Nominal target plafond" },
+        "target_count": { "type": "integer", "description": "Target jumlah deal unit" },
+        "created_date": { "type": "string", "description": "Waktu import" }
+      },
+      "required": ["marketing_name", "month", "target_amount"]
+    },
+    "BookingQuality": {
+      "title": "BookingQuality",
+      "description": "Monitoring kualitas pembiayaan dan jatuh tempo angsuran",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID data tagihan" },
+        "contract_no": { "type": "string", "description": "Nomor kontrak" },
+        "customer_name": { "type": "string", "description": "Nama konsumen" },
+        "status_account": { "type": "string", "description": "Status kolektibilitas" },
+        "jatuh_tempo": { "type": "string", "description": "Tanggal jatuh tempo" },
+        "angsuran": { "type": "number", "description": "Nominal angsuran bulanan" },
+        "marketing_name": { "type": "string", "description": "Marketing penanggung jawab" },
+        "created_date": { "type": "string", "description": "Waktu import" }
+      },
+      "required": ["contract_no", "customer_name", "status_account", "jatuh_tempo"]
+    },
+    "Prospect": {
+      "title": "Prospect",
+      "description": "Daftar prospek dan pipeline marketing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID prospek" },
+        "customer_name": { "type": "string", "description": "Nama calon nasabah" },
+        "phone": { "type": "string", "description": "Nomor HP / WA" },
+        "status": { "type": "string", "description": "Status prospek (tersedia, diambil, selesai)" },
+        "motor": { "type": "string", "description": "Rencana unit motor" },
+        "plafond": { "type": "number", "description": "Estimasi plafond" },
+        "marketing_name": { "type": "string", "description": "Marketing yang memegang" },
+        "created_date": { "type": "string", "description": "Waktu input" }
+      },
+      "required": ["customer_name"]
+    },
+    "FollowUpBahan": {
+      "title": "FollowUpBahan",
+      "description": "Bahan kerja follow up harian marketing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID bahan follow up" },
+        "customer_name": { "type": "string", "description": "Nama konsumen" },
+        "phone": { "type": "string", "description": "Nomor telepon" },
+        "motor": { "type": "string", "description": "Unit motor" },
+        "status": { "type": "string", "description": "Status follow up" },
+        "notes": { "type": "string", "description": "Catatan tindak lanjut" },
+        "marketing_name": { "type": "string", "description": "Marketing yang memproses" },
+        "created_date": { "type": "string", "description": "Waktu input" }
+      },
+      "required": ["customer_name"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Catatan riwayat audit import dan aktivitas sistem",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID log" },
+        "action": { "type": "string", "description": "Jenis aksi (import_data, update_otr, dsb)" },
+        "detail": { "type": "string", "description": "Rincian aktivitas" },
+        "marketing_name": { "type": "string", "description": "Pelaku aktivitas" },
+        "created_date": { "type": "string", "description": "Waktu eksekusi" }
+      },
+      "required": ["action"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Data profil akun pengguna dan marketing"
+    },
+    "/otr_prices/{otrId}": {
+      "schema": "OtrPrice",
+      "description": "Katalog harga OTR motor"
+    },
+    "/clop_contracts/{contractId}": {
+      "schema": "ClopContract",
+      "description": "Data kontrak debitur CLOP"
+    },
+    "/taksasi/{taksasiId}": {
+      "schema": "Taksasi",
+      "description": "Rekap riwayat taksasi motor"
+    },
+    "/targets/{targetId}": {
+      "schema": "Target",
+      "description": "Target pembiayaan bulanan marketing"
+    },
+    "/booking_quality/{bqId}": {
+      "schema": "BookingQuality",
+      "description": "Daftar tagihan dan booking quality"
+    },
+    "/prospects/{prospectId}": {
+      "schema": "Prospect",
+      "description": "Data prospek dan pembagian lead marketing"
+    },
+    "/follow_up_bahan/{bahanId}": {
+      "schema": "FollowUpBahan",
+      "description": "Bahan kerja follow up marketing"
+    },
+    "/activity_logs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Log riwayat import file Excel dan aktivitas"
+    }
+  }
+}

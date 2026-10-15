@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'bani.munggaran07@gmail.com' ||
+        (request.auth.token.email != null && request.auth.token.email.matches('.*@admin\\.smarttaksasi\\.com$'))
+      );
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isSignedIn() && (isUser(userId) || isAdmin());
+      allow create: if isSignedIn() && isValidId(userId) && (isUser(userId) || isAdmin());
+      allow update: if isSignedIn() && (isUser(userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // OTR Prices Collection
+    match /otr_prices/{otrId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // CLOP Contracts Collection
+    match /clop_contracts/{contractId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Taksasi Collection
+    match /taksasi/{taksasiId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(taksasiId);
+      allow update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Targets Collection
+    match /targets/{targetId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Booking Quality Collection
+    match /booking_quality/{bqId} {
+      allow read: if isSignedIn();
+      allow create, delete: if isAdmin();
+      allow update: if isSignedIn();
+    }
+
+    // Prospects Collection
+    match /prospects/{prospectId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(prospectId);
+      allow update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Follow Up Bahan Collection
+    match /follow_up_bahan/{bahanId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(bahanId);
+      allow update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Activity Logs Collection
+    match /activity_logs/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(logId);
+      allow update, delete: if isAdmin();
+    }
+  }
+}
