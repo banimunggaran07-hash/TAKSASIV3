@@ -14,7 +14,12 @@ import {
   User
 } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
-import { openMasterImportHub } from './master-import-hub';
+import { openMasterImportHub, mountMasterImportHub, downloadEntityExcelTemplate } from './master-import-hub';
+if (typeof window !== 'undefined') {
+  window.mountMasterImportHub = mountMasterImportHub;
+  window.openMasterImportHub = openMasterImportHub;
+  window.downloadEntityExcelTemplate = downloadEntityExcelTemplate;
+}
 
 // Initialize Firebase client
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
@@ -178,6 +183,7 @@ export function downloadFileViaBlob(url: string, filename: string, btnElement?: 
 // Render or remove the Topbar User Status Bar
 function renderUserBar(user: User) {
   currentUserInstance = user;
+  mountMasterImportHub();
   let bar = document.getElementById('smart-taksasi-user-bar');
   if (!bar) {
     bar = document.createElement('div');
@@ -201,6 +207,13 @@ function renderUserBar(user: User) {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
       </svg>
       <span>Unduh APK</span>
+    </button>
+    <div class="h-4 w-px bg-slate-700/80"></div>
+    <button id="btn-topbar-master-hub" type="button" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold text-cyan-300 bg-cyan-950/70 hover:bg-cyan-900/80 border border-cyan-500/40 active:scale-95 shadow-[0_0_12px_rgba(6,182,212,0.25)] transition-all cursor-pointer" title="Buka Master Data & Import Hub (1 Tab 1 Master)">
+      <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7M4 7c0-2 1-3 3-3h10c2 0 3 1 3 3M4 7h16M9 11h6M9 15h4" />
+      </svg>
+      <span>Import Master</span>
     </button>
     <div class="h-4 w-px bg-slate-700/80"></div>
     <button id="btn-smart-profile" type="button" class="flex items-center gap-2 pr-2 text-left hover:opacity-90 active:scale-95 transition-all max-w-[170px] sm:max-w-[220px] cursor-pointer" title="Buka Profil & Pengaturan Sesi">
@@ -227,7 +240,13 @@ function renderUserBar(user: User) {
     });
   }
 
-
+  // Master Import Hub click
+  const topbarMasterBtn = document.getElementById('btn-topbar-master-hub');
+  if (topbarMasterBtn) {
+    topbarMasterBtn.addEventListener('click', () => {
+      openMasterImportHub();
+    });
+  }
 
   // Profile modal click
   const profileBtn = document.getElementById('btn-smart-profile');

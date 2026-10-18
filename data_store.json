@@ -1,6 +1,22 @@
 {
   "OtrPrice": [
     {
+      "brand": "HONDA",
+      "model": "VARIO",
+      "year": 2023,
+      "harga_pasar": 21000000,
+      "id": "otrprice_1792320152832_0_39v",
+      "created_date": "2026-10-18T10:42:32.832Z"
+    },
+    {
+      "brand": "Honda",
+      "model": "Beat",
+      "year": 2023,
+      "harga_pasar": 18000000,
+      "id": "otrprice_1792319781896_0_xlc",
+      "created_date": "2026-10-18T10:36:21.896Z"
+    },
+    {
       "id": "otr_1",
       "brand": "HONDA",
       "model": "BEAT",
@@ -843,6 +859,24 @@
   "Notification": [
     {
       "for_role": "supervisor",
+      "title": "Draft belum dikerjakan",
+      "message": "Taksasi \"BANI MUNGGARAN\" (SF) sudah 5 hari belum dikerjakan.",
+      "ref_id": "late_draft_taksasi_1791836441350_1hz1",
+      "read": false,
+      "id": "notification_1792319252998_0",
+      "created_date": "2026-10-18T10:27:32.998Z"
+    },
+    {
+      "for_role": "supervisor",
+      "title": "Bahan belum dikerjakan",
+      "message": "Bahan \"-\" (CS -) sudah 16 hari belum dikerjakan.",
+      "ref_id": "late_bahan_fub_1",
+      "read": false,
+      "id": "notification_1792319252998_1",
+      "created_date": "2026-10-18T10:27:32.998Z"
+    },
+    {
+      "for_role": "supervisor",
       "title": "Bahan belum dikerjakan",
       "message": "Bahan \"-\" (CS -) sudah 11 hari belum dikerjakan.",
       "ref_id": "late_bahan_fub_1",
@@ -888,5 +922,6 @@
       "plafond": 28300000,
       "created_date": "2026-10-12T20:21:20.794Z"
     }
-  ]
+  ],
+  "TestEntity": []
 }
