@@ -1,0 +1,106 @@
+# Base44 sandbox/dev environment for Smart Taksasi V2.1.3.
+#
+# The product is ONE Node process: server.ts (Express + WebSocket) serves the SPA
+# from index.html/public/ and the REST API under /api/* on the same origin, so a
+# single `web` service is the user-facing entry point on host port 3000.
+#
+# Postgres is required for the app to show data: `src/db/repo.ts` returns an empty
+# array when SQL_* is unset, and the entity list routes return that empty array
+# directly, so every data page would render empty. With SQL_* wired to the `db`
+# service below the app uses its primary Drizzle/Postgres path (the bundled
+# data_store.json stays as the write-through fallback). Tables are created from
+# src/db/schema.ts by the one-shot `migrate` service before the server starts.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=smart
+      - POSTGRES_PASSWORD=smart_dev_password
+      - POSTGRES_DB=smart_taksasi
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smart -d smart_taksasi"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    labels:
+      base44.project: Smart Taksasi Postgres
+      base44.kind: infra
+
+  # One-shot schema sync (drizzle-kit push from src/db/schema.ts). Exits when done;
+  # `web` waits for it, so tables exist before the app seeds and serves requests.
+  migrate:
+    image: node:22
+    working_dir: /app
+    command:
+      - sh
+      - -ec
+      - npm install --no-audit --no-fund --no-package-lock && npx drizzle-kit push --force --config=src/db/drizzle.config.ts
+    environment:
+      - SQL_HOST=db
+      - SQL_DB_NAME=smart_taksasi
+      - SQL_ADMIN_USER=smart
+      - SQL_ADMIN_PASSWORD=smart_dev_password
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    # Plain runtime image + bind-mounted source: edits are picked up by tsx watch.
+    # Never the project's published/prebuilt image.
+    image: node:22
+    working_dir: /app
+    # npm install writes node_modules (and its internal .package-lock.json) but with
+    # --no-package-lock it never rewrites the repo's package-lock.json. Dependencies
+    # live in a named volume so node_modules is never written into the repo.
+    command:
+      - sh
+      - -ec
+      - npm install --no-audit --no-fund --no-package-lock && exec npx tsx watch server.ts
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      # server.ts hardcodes 3000/0.0.0.0 as defaults; kept explicit for clarity.
+      - PORT=3000
+      - HOST=0.0.0.0
+      # Primary datastore (see src/db/index.ts). Local infra credentials only.
+      - SQL_HOST=db
+      - SQL_USER=smart
+      - SQL_PASSWORD=smart_dev_password
+      - SQL_DB_NAME=smart_taksasi
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: on-failure
+    labels:
+      base44.project: Smart Taksasi V2.1.3
+      base44.kind: web
+      base44.port: "3000"
+    healthcheck:
+      # /health is an existing read-only endpoint; probe it with the Node runtime
+      # already in the image (node:22 has global fetch, no curl/wget in slim images).
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 120s
+
+volumes:
+  node_modules:
+  pgdata:

@@ -1,3 +1,6 @@
+# Node dependencies (installed into a Docker volume by docker-compose.base44.yml)
+node_modules/
+
 # Gradle files
 .gradle/
 build/

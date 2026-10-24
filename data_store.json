@@ -859,6 +859,24 @@
   "Notification": [
     {
       "for_role": "supervisor",
+      "title": "Bahan belum dikerjakan",
+      "message": "Bahan \"-\" (CS -) sudah 22 hari belum dikerjakan.",
+      "ref_id": "late_bahan_fub_1",
+      "read": false,
+      "id": "notification_1792873151267_0",
+      "created_date": "2026-10-24T20:19:11.267Z"
+    },
+    {
+      "for_role": "supervisor",
+      "title": "Bahan belum dikerjakan",
+      "message": "Bahan \"-\" (CS -) sudah 22 hari belum dikerjakan.",
+      "ref_id": "late_bahan_fub_1",
+      "read": false,
+      "id": "notification_1792873126595_0",
+      "created_date": "2026-10-24T20:18:46.595Z"
+    },
+    {
+      "for_role": "supervisor",
       "title": "Draft belum dikerjakan",
       "message": "Taksasi \"BANI MUNGGARAN\" (SF) sudah 5 hari belum dikerjakan.",
       "ref_id": "late_draft_taksasi_1791836441350_1hz1",
