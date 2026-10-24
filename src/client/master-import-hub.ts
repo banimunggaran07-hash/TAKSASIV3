@@ -137,6 +137,7 @@ export const MASTER_ENTITIES: MasterEntityConfig[] = [
     idPrefix: 'fub_',
     fields: [
       { key: 'customer_name', label: 'Nama Calon Konsumen', type: 'text', required: true, placeholder: 'Nama calon konsumen', excelAliases: ['customer_name', 'nama calon konsumen', 'nama pendaftar', 'nama', 'nama konsumen', 'nama lengkap'] },
+      { key: 'no_kontrak', label: 'Nomor Kontrak', type: 'text', placeholder: '0123456789', excelAliases: ['no_kontrak', 'contract_no', 'no kontrak', 'nomor kontrak', 'contract no', 'kontrak', 'no. kontrak'] },
       { key: 'phone', label: 'Nomor WhatsApp / HP', type: 'text', required: true, placeholder: '081234567890', excelAliases: ['phone', 'no hp', 'nomor hp', 'telepon', 'whatsapp', 'no wa', 'kontak', 'telp'] },
       { key: 'motor', label: 'Unit Motor yang Diminati', type: 'text', required: true, placeholder: 'Honda Beat / Vario 125', excelAliases: ['motor', 'unit motor', 'tipe motor', 'pilihan motor', 'kendaraan', 'motor yang diminati'] },
       { key: 'status', label: 'Status Tindak Lanjut', type: 'select', options: ['bahan', 'follow_up', 'proses_taksasi', 'deal', 'batal'], excelAliases: ['status', 'status tindak lanjut', 'tahap', 'stage', 'progres'] },
@@ -144,9 +145,9 @@ export const MASTER_ENTITIES: MasterEntityConfig[] = [
       { key: 'marketing_name', label: 'Marketing PIC', type: 'text', placeholder: 'Nama marketing penangan', excelAliases: ['marketing_name', 'nama marketing', 'marketing', 'pic'] }
     ],
     sampleData: [
-      { customer_name: 'Hendra Gunawan', phone: '081234567890', motor: 'Honda Vario 125', status: 'follow_up', notes: 'Butuh dana 15 juta untuk modal toko', marketing_name: 'Dani Pratama' },
-      { customer_name: 'Maya Anggraeni', phone: '081398765432', motor: 'Yamaha Fazzio', status: 'proses_taksasi', notes: 'Gadai BPKB motor an sendiri', marketing_name: 'Rina Wulandari' },
-      { customer_name: 'Wahyu Tri', phone: '085712349988', motor: 'Honda Scoopy', status: 'bahan', notes: 'Tanya simulasi tenor 23 bulan', marketing_name: 'Dani Pratama' }
+      { customer_name: 'Hendra Gunawan', no_kontrak: '0123456789', phone: '081234567890', motor: 'Honda Vario 125', status: 'follow_up', notes: 'Butuh dana 15 juta untuk modal toko', marketing_name: 'Dani Pratama' },
+      { customer_name: 'Maya Anggraeni', no_kontrak: '0123456790', phone: '081398765432', motor: 'Yamaha Fazzio', status: 'proses_taksasi', notes: 'Gadai BPKB motor an sendiri', marketing_name: 'Rina Wulandari' },
+      { customer_name: 'Wahyu Tri', no_kontrak: '0123456791', phone: '085712349988', motor: 'Honda Scoopy', status: 'bahan', notes: 'Tanya simulasi tenor 23 bulan', marketing_name: 'Dani Pratama' }
     ]
   },
   {
@@ -1341,11 +1342,30 @@ function renderTableView(entityKey: string) {
                 return `<td class="p-3 whitespace-nowrap">${display}</td>`;
               }).join('')}
               <td class="p-3 text-right whitespace-nowrap">
-                <button type="button" class="btn-delete-record text-rose-400 hover:text-rose-300 p-1 cursor-pointer" data-id="${rec.id}" title="Hapus record">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
+                <div class="flex items-center justify-end gap-1.5">
+                  ${(() => {
+                    const rawHp = rec.phone || rec.no_hp || '';
+                    const cleanHp = String(rawHp).replace(/[^0-9]/g, '');
+                    if (!cleanHp) return '';
+                    const N = String(rec.customer_name || rec.nama_konsumen || '').trim();
+                    const K = String(rec.no_kontrak || rec.contract_no || '').trim();
+                    const M = String(rec.marketing_name || '').trim();
+                    const textMsg = `HALLO FIFFERS💸 \nPELANGGAN YTH \nNAMA : ${N}\nNO KONTRAK : ${K}\nButuh dana?? ke FIFGROUP aja jaminan *BPKB MOTOR* Anda \nSyarat mudah dan aman \n- Bisa ajukan Top up \n- Take Over \n- Proses cepat \n-potongan angsuran 15rb sampai 30rb\n\nFull Tanpa Potongan Apapun \nAjukan Hari Ini Dapatkan uangnya juga hari ini \n☎ Hub : Tlp/Wa : ${M || '(NAMA MARKETING)'}\nGratis souvernir menarik \nMau tanya-tanya dulu juga boleh😊 \nTerimakasih🙏`;
+                    const waUrl = `https://wa.me/${cleanHp.startsWith('0') ? '62' + cleanHp.slice(1) : cleanHp}?text=${encodeURIComponent(textMsg)}`;
+                    return `
+                      <a href="${waUrl}" target="_blank" rel="noreferrer" class="p-1 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 cursor-pointer transition-colors" title="Hubungi WhatsApp dengan Template">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                      </a>
+                    `;
+                  })()}
+                  <button type="button" class="btn-delete-record text-rose-400 hover:text-rose-300 p-1 rounded-lg hover:bg-rose-500/10 cursor-pointer transition-colors" data-id="${rec.id}" title="Hapus record">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
               </td>
             </tr>
           `).join('')}
