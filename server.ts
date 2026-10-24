@@ -288,7 +288,7 @@ app.get(['/api/apps/:appId/entities/:entity', '/api/entities/:entity'], optional
   const entityName = String(req.params.entity);
   try {
     const rows = await listEntity(entityName, req.query);
-    if (Array.isArray(rows)) {
+    if (Array.isArray(rows) && rows.length > 0) {
       return res.json(rows);
     }
   } catch (err: any) {
@@ -319,7 +319,7 @@ app.get(['/api/apps/:appId/entities/:entity/v2/list', '/api/entities/:entity/v2/
   const entityName = String(req.params.entity);
   try {
     const rows = await listEntity(entityName, req.query);
-    if (Array.isArray(rows)) {
+    if (Array.isArray(rows) && rows.length > 0) {
       return res.json(rows);
     }
   } catch (err: any) {
@@ -334,7 +334,10 @@ app.get(['/api/apps/:appId/entities/:entity/count', '/api/entities/:entity/count
   const entityName = String(req.params.entity);
   try {
     const rows = await listEntity(entityName, req.query);
-    return res.json({ count: rows.length });
+    if (Array.isArray(rows) && rows.length > 0) {
+      return res.json({ count: rows.length });
+    }
+    return res.json({ count: getFallback(entityName).length });
   } catch {
     return res.json({ count: getFallback(entityName).length });
   }
